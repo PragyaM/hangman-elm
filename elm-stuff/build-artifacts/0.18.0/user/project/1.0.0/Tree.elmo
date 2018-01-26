@@ -1,0 +1,35 @@
+var _user$project$Tree$subscriptions = '';
+var _user$project$Tree$growTree = F2(
+	function (tree, increment) {
+		return tree;
+	});
+var _user$project$Tree$growButton = A2(
+	_elm_lang$html$Html$button,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Events$onClick(_user$project$Tree$growTree),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Grow!'),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Tree$update = '';
+var _user$project$Tree$view = function (tree) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('TREE STUFF'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Tree$Node = F3(
+	function (a, b, c) {
+		return {ctor: 'Node', _0: a, _1: b, _2: c};
+	});
+var _user$project$Tree$Leaf = {ctor: 'Leaf'};
+var _user$project$Tree$init = _user$project$Tree$Leaf;
+var _user$project$Tree$Grow = {ctor: 'Grow'};
