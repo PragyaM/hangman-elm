@@ -1,50 +1,193 @@
 var _user$project$Hangman$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
+var _user$project$Hangman$submitGuess = function (_p0) {
+	var _p1 = _p0;
+	var _p3 = _p1._1;
+	var charLetter = A2(
+		_elm_lang$core$Array$get,
+		0,
+		_elm_lang$core$Array$fromList(
+			_elm_lang$core$String$toList(_p1._0)));
+	var _p2 = charLetter;
+	if (_p2.ctor === 'Nothing') {
+		return _p3;
+	} else {
+		return _elm_lang$core$Native_Utils.update(
+			_p3,
+			{
+				guessedLetters: A2(
+					_elm_lang$core$Basics_ops['++'],
+					_p3.guessedLetters,
+					{
+						ctor: '::',
+						_0: _p2._0,
+						_1: {ctor: '[]'}
+					})
+			});
+	}
+};
 var _user$project$Hangman$deductOneLife = function (model) {
 	return _elm_lang$core$Native_Utils.update(
 		model,
 		{livesRemaining: model.livesRemaining - 1});
 };
-var _user$project$Hangman$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		if (_p0.ctor === 'SubmitGuess') {
-			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-		} else {
-			return {
-				ctor: '_Tuple2',
-				_0: _user$project$Hangman$deductOneLife(model),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
-		}
-	});
-var _user$project$Hangman$view = A2(
-	_elm_lang$html$Html$div,
-	{ctor: '[]'},
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html$text('Welcome to Hangman'),
-		_1: {ctor: '[]'}
-	});
 var _user$project$Hangman$randomWord = 'Hello';
-var _user$project$Hangman$Model = F4(
-	function (a, b, c, d) {
-		return {secretWord: a, livesRemaining: b, guessedLetters: c, obfuscatedWord: d};
+var _user$project$Hangman$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {secretWord: a, livesRemaining: b, guessedLetters: c, currentGuess: d, obfuscatedWord: e, gameState: f};
 	});
+var _user$project$Hangman$InputGuess = function (a) {
+	return {ctor: 'InputGuess', _0: a};
+};
+var _user$project$Hangman$Restart = {ctor: 'Restart'};
+var _user$project$Hangman$SubmitGuess = function (a) {
+	return {ctor: 'SubmitGuess', _0: a};
+};
+var _user$project$Hangman$guessInputField = function (model) {
+	return A2(
+		_elm_lang$html$Html$form,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$input,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$type_('text'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$placeholder('Enter guess'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onInput(_user$project$Hangman$InputGuess),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onSubmit(
+									_user$project$Hangman$SubmitGuess(model.currentGuess)),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Hangman$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h1,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Welcome to Hangman'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'Word to guess: ',
+								_elm_lang$core$Basics$toString(model.obfuscatedWord))),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'Lives remaining: ',
+									_elm_lang$core$Basics$toString(model.livesRemaining))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Hangman$guessInputField(model),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											'Guessed letters: ',
+											_elm_lang$core$Basics$toString(model.guessedLetters))),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$Hangman$Lost = {ctor: 'Lost'};
+var _user$project$Hangman$Won = {ctor: 'Won'};
+var _user$project$Hangman$InProgress = {ctor: 'InProgress'};
 var _user$project$Hangman$newGame = function (word) {
-	return A4(
+	return A6(
 		_user$project$Hangman$Model,
 		word,
 		5,
 		{ctor: '[]'},
-		'obfuscated word');
+		'',
+		'obfuscated word',
+		_user$project$Hangman$InProgress);
 };
-var _user$project$Hangman$init = _user$project$Hangman$newGame(_user$project$Hangman$randomWord);
-var _user$project$Hangman$DeductOneLife = {ctor: 'DeductOneLife'};
-var _user$project$Hangman$SubmitGuess = function (a) {
-	return {ctor: 'SubmitGuess', _0: a};
-};
+var _user$project$Hangman$init = A2(
+	_elm_lang$core$Platform_Cmd_ops['!'],
+	_user$project$Hangman$newGame('word'),
+	{
+		ctor: '::',
+		_0: _elm_lang$core$Platform_Cmd$none,
+		_1: {ctor: '[]'}
+	});
+var _user$project$Hangman$update = F2(
+	function (msg, model) {
+		var _p4 = msg;
+		switch (_p4.ctor) {
+			case 'InputGuess':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{currentGuess: _p4._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'SubmitGuess':
+				return {
+					ctor: '_Tuple2',
+					_0: _user$project$Hangman$submitGuess(
+						{ctor: '_Tuple2', _0: _p4._0, _1: model}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _user$project$Hangman$newGame('another word'),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
 var _user$project$Hangman$Duplicate = {ctor: 'Duplicate'};
 var _user$project$Hangman$Invalid = {ctor: 'Invalid'};
 var _user$project$Hangman$Fail = {ctor: 'Fail'};
@@ -56,5 +199,8 @@ var _user$project$Hangman$isGuessSuccessful = F2(
 			0,
 			_elm_lang$core$Array$fromList(
 				_elm_lang$core$String$toList(letter)));
-		return A2(_elm_lang$core$List$member, charLetter, model.guessedLetters) ? _user$project$Hangman$Duplicate : (A2(_elm_lang$core$String$contains, model.secretWord, letter) ? _user$project$Hangman$Success : _user$project$Hangman$Fail);
+		return A2(
+			_elm_lang$core$List$member,
+			charLetter,
+			A2(_elm_lang$core$List$map, _elm_lang$core$Maybe$Just, model.guessedLetters)) ? _user$project$Hangman$Duplicate : (A2(_elm_lang$core$String$contains, model.secretWord, letter) ? _user$project$Hangman$Success : _user$project$Hangman$Fail);
 	});
