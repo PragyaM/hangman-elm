@@ -1,14 +1,14 @@
 module Hangman exposing ( init, newGame, view, update, subscriptions, Model, Msg )
 
-import Html exposing ( text, input, button, div, h1, form )
-import Html.Events exposing ( onInput, onSubmit )
+import Html exposing ( text, input, button, div, h1, form, span )
+import Html.Events exposing ( onInput, onSubmit, onClick )
 import Html.Attributes exposing ( type_, placeholder )
 import Array
 
 -- MODEL
 
 type alias Model =
-  { secretWord : String
+  { secretWord : Dict Char Bool
   , livesRemaining : Int
   , guessedLetters : List Char
   , currentGuess : String
@@ -22,7 +22,9 @@ init =
 
 newGame : String -> Model
 newGame word =
-  Model word 5 [] "" "obfuscated word" InProgress
+  let wordDict = List.map2 (,) (String.toList word) (List.repeat (String.length word) False)
+  in
+    Model wordDict 5 [] "" "obfuscated word" InProgress
 
 -- currentGame : Model
 
@@ -44,9 +46,11 @@ view model =
     [ h1 [] [text "Welcome to Hangman"]
     , div [] [text ("Word to guess: " ++ (toString model.obfuscatedWord))]
     , div [] [text ("Lives remaining: " ++ (toString model.livesRemaining))]
-    , guessInputField model
-    , button [] [text "Submit", SubmitGuess model.currentGuess]
+    , span [] [guessInputField model
+              , button [onClick (SubmitGuess model.currentGuess)] [text "Submit"]
+              ]
     , div [] [text ("Guessed letters: " ++ (toString model.guessedLetters))]
+    , button [onClick Restart] [text "New Game"]
     ]
 
 -- obfuscatedWord : (String, List Char) -> String
@@ -86,10 +90,20 @@ isGuessSuccessful letter model =
   in
     if List.member charLetter (List.map Maybe.Just model.guessedLetters) then
       Duplicate -- they have already guessed this letter
-    else if String.contains model.secretWord letter then
+    else if Dict.member letter model.secretWord then
       Success -- successful guess!
     else
       Fail -- unsuccessful guess
+
+updateGameState : Model -> Model
+updateGameState model =
+  if List.foldr (&&) True model.sercretWord.values then
+    { model | gameState = GameState.Won }
+
+-- letterInWordHasBeenGuessed : String -> Model -> Bool
+-- letterInWordHasBeenGuessed letter model =
+--   contains letter model.secretWord
+
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -99,6 +113,9 @@ update msg model =
     )
     SubmitGuess guess -> (
       (submitGuess(guess, model), Cmd.none)
+    )
+    UpdateGameState -> (
+      (updateGameState(model), Cmd.none)
     )
     Restart ->
       (newGame "another word", Cmd.none)
