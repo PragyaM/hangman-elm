@@ -45,7 +45,7 @@ var _user$project$Hangman$view = function (model) {
 var _user$project$Hangman$randomWord = 'Hello';
 var _user$project$Hangman$Model = F5(
 	function (a, b, c, d, e) {
-		return {secretWord: a, livesRemaining: b, guessedLetters: c, obfuscatedWord: d, gameState: e};
+		return {secretWordLetters: a, livesRemaining: b, guessedLetters: c, obfuscatedWord: d, gameState: e};
 	});
 var _user$project$Hangman$Restart = {ctor: 'Restart'};
 var _user$project$Hangman$SubmitGuess = function (a) {
@@ -103,5 +103,5 @@ var _user$project$Hangman$isGuessSuccessful = F2(
 		return A2(
 			_elm_lang$core$List$member,
 			charLetter,
-			A2(_elm_lang$core$List$map, _elm_lang$core$Maybe$Just, model.guessedLetters)) ? _user$project$Hangman$Duplicate : (A2(_elm_lang$core$String$contains, model.secretWord, letter) ? _user$project$Hangman$Success : _user$project$Hangman$Fail);
+			A2(_elm_lang$core$List$map, _elm_lang$core$Maybe$Just, model.guessedLetters)) ? _user$project$Hangman$Duplicate : (A2(_elm_lang$core$String$contains, model.secretWordLetters, letter) ? _user$project$Hangman$Success : _user$project$Hangman$Fail);
 	});

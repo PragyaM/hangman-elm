@@ -1,0 +1,22 @@
+var _user$project$Repl$wordDict = _elm_lang$core$Dict$fromList(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'a', _1: false},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 't', _1: false},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'w', _1: false},
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+var _user$project$Repl$t_s_o_l = {ctor: '_Tuple0'};
+var _user$project$Repl$d_e_l_t_r_o_n_3_0_3_0 = A2(
+	_elm_lang$core$Dict$map,
+	F2(
+		function (k, v) {
+			return v ? k : '_';
+		}),
+	_user$project$Repl$wordDict);
