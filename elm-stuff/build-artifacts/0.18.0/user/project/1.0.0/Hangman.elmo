@@ -23,7 +23,15 @@ var _user$project$Hangman$inputGuess = F2(
 	});
 var _user$project$Hangman$obfuscatedWord = function (_p1) {
 	var _p2 = _p1;
-	return _p2.secretWord;
+	return A2(
+		_elm_lang$core$String$map,
+		function (letter) {
+			return A2(
+				_elm_lang$core$List$member,
+				_elm_lang$core$String$fromChar(letter),
+				_p2.guessedLetters) ? letter : _elm_lang$core$Native_Utils.chr('_');
+		},
+		_p2.secretWord);
 };
 var _user$project$Hangman$guessOutcomeOutput = function (model) {
 	var _p3 = model.currentGuessOutcome;
@@ -49,7 +57,7 @@ var _user$project$Hangman$guessOutcomeOutput = function (model) {
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('That was not a valid guess! Try entering a letter from the alphabet this time, dangus.'),
+						_0: _elm_lang$html$Html$text('That was not a valid guess! Try entering a letter from the alphabet this time, butthead.'),
 						_1: {ctor: '[]'}
 					});
 			case 'Duplicate':
@@ -73,6 +81,16 @@ var _user$project$Hangman$guessOutcomeOutput = function (model) {
 		}
 	}
 };
+var _user$project$Hangman$hiddenWordStyle = _elm_lang$html$Html_Attributes$style(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'font-size', _1: '2em'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'letter-spacing', _1: '5px'},
+			_1: {ctor: '[]'}
+		}
+	});
 var _user$project$Hangman$randomWord = 'Hello';
 var _user$project$Hangman$newGame = function (word) {
 	var wordDict = _elm_lang$core$Dict$fromList(
@@ -197,7 +215,11 @@ var _user$project$Hangman$view = function (model) {
 				ctor: '::',
 				_0: A2(
 					_elm_lang$html$Html$div,
-					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _user$project$Hangman$hiddenWordStyle,
+						_1: {ctor: '[]'}
+					},
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(

@@ -69,7 +69,7 @@ view : Model -> Html.Html Msg
 view model =
     div []
         [ h1 [] [ text "Welcome to Hangman" ]
-        , div [] [ text ("Word to guess: " ++ (obfuscatedWord model)) ]
+        , div [ hiddenWordStyle ] [ text ("Word to guess: " ++ (obfuscatedWord model)) ]
         , div [] [ text ("Lives remaining: " ++ (toString model.livesRemaining)) ]
         , guessInputField model
         , button [ onClick SubmitGuess ] [ text "Submit" ]
@@ -77,6 +77,13 @@ view model =
         , guessOutcomeOutput model
         , gameStateOutput model
         , button [ onClick Restart ] [ text "New Game" ]
+        ]
+
+
+hiddenWordStyle =
+    Html.Attributes.style
+        [ ( "font-size", "2em" )
+        , ( "letter-spacing", "5px" )
         ]
 
 
@@ -90,13 +97,13 @@ guessOutcomeOutput model =
             div [] [ text "Successful guess! HIGH FIVE." ]
 
         Just Invalid ->
-            div [] [ text "That was not a valid guess! Try entering a letter from the alphabet this time, dangus." ]
+            div [] [ text "That was not a valid guess! Try entering a letter from the alphabet this time." ]
 
         Just Duplicate ->
             div [] [ text "You have already guessed that!" ]
 
         Just Fail ->
-            div [] [ text "WRONG! Try again. But also remember that the fate of the gentleman guppy is in your hands." ]
+            div [] [ text "WRONG! Try again." ]
 
 
 gameStateOutput : Model -> Html.Html Msg
@@ -109,12 +116,19 @@ gameStateOutput model =
             div [] [ text "YOU WON!!!!!!!!! Nice." ]
 
         Lost ->
-            div [] [ text "Way to kill the only guy who knew the way to dry land, you dangus." ]
+            div [] [ text "He dead. You lose." ]
 
 
 obfuscatedWord : Model -> String
-obfuscatedWord { secretWord, secretWordLetters } =
-    secretWord
+obfuscatedWord { secretWord, secretWordLetters, guessedLetters } =
+    String.map
+        (\letter ->
+            if List.member (String.fromChar letter) guessedLetters then
+                letter
+            else
+                '_'
+        )
+        secretWord
 
 
 guessInputField : Model -> Html.Html Msg
