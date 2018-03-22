@@ -5,6 +5,9 @@ import Html.Events exposing (onInput, onSubmit, onClick)
 import Html.Attributes exposing (type_, placeholder)
 import Array
 import Dict exposing (Dict)
+import Random.Extra exposing (sample)
+import Random exposing (Generator, generate, map)
+import Words
 
 
 -- MODEL
@@ -18,6 +21,12 @@ type alias Model =
     , currentGuessLetter : Maybe String
     , currentGuessOutcome : Maybe GuessOutcome
     }
+
+type GuessOutcome
+    = Success
+    | Fail
+    | Invalid
+    | Duplicate
 
 
 init : ( Model, Cmd Msg )
@@ -40,27 +49,10 @@ newGame word =
         }
 
 
-
--- currentGame : Model
-
-
-randomWord : String
-randomWord =
-    "Hello"
-
-
-type Msg
-    = SubmitGuess
-    | Restart
-    | InputGuess String
-
-
 type GameState
     = InProgress
     | Won
     | Lost
-
-
 
 -- VIEW
 
@@ -76,7 +68,7 @@ view model =
         , div [] [ text ("Guessed letters: " ++ (toString model.guessedLetters)) ]
         , guessOutcomeOutput model
         , gameStateOutput model
-        , button [ onClick Restart ] [ text "New Game" ]
+        , button [ onClick SampleWord ] [ text "New Game" ]
         ]
 
 
@@ -139,6 +131,31 @@ guessInputField model =
 
 -- UPDATE
 
+type Msg
+    = SubmitGuess
+    | Restart String
+    | InputGuess String
+    | SampleWord
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        InputGuess string ->
+            (( inputGuess string model, Cmd.none ))
+
+        SubmitGuess ->
+            (( submitGuess model, Cmd.none ))
+
+        SampleWord ->
+            (( model, generate Restart sampleWord ))
+
+        Restart word ->
+            (( newGame word, Cmd.none ))
+
+sampleWord : Generator String
+sampleWord =
+  sample Words.words
+    |> map (Maybe.withDefault "word")
 
 updateLivesRemaining : Int -> GuessOutcome -> Int
 updateLivesRemaining livesRemaining guessOutcome =
@@ -176,11 +193,7 @@ submitGuess model =
                 }
 
 
-type GuessOutcome
-    = Success
-    | Fail
-    | Invalid
-    | Duplicate
+
 
 
 outcomeForGuess : String -> Model -> GuessOutcome
@@ -217,26 +230,6 @@ currentGameState model =
         Lost
     else
         InProgress
-
-
-
--- letterInWordHasBeenGuessed : String -> Model -> Bool
--- letterInWordHasBeenGuessed letter model =
---   contains letter model.secretWordLetters
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        InputGuess string ->
-            (( inputGuess string model, Cmd.none ))
-
-        SubmitGuess ->
-            (( submitGuess model, Cmd.none ))
-
-        Restart ->
-            (( newGame "waterworld", Cmd.none ))
-
 
 
 -- SUBSCRIPTIONS
